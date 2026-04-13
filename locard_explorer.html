@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>黃子懿 - 羅卡定律探索器</title>
+    <style>
+        body { font-family: sans-serif; background: #1e293b; color: white; text-align: center; }
+        .container { margin-top: 50px; }
+        .circle { border-radius: 50%; display: inline-block; position: relative; transition: 0.3s; cursor: pointer; }
+        #suspect { background: rgba(239, 68, 68, 0.6); width: 200px; height: 200px; line-height: 200px; z-index: 1; margin-right: -50px; border: 2px solid #ef4444; }
+        #scene { background: rgba(59, 130, 246, 0.6); width: 200px; height: 200px; line-height: 200px; z-index: 1; border: 2px solid #3b82f6; }
+        .info { margin-top: 30px; font-size: 1.2em; color: #fcd34d; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🕵️ 羅卡定律互動探索器</h1>
+    <p>點擊圓圈，觀察物質是如何進行雙向交換的</p>
+    <div class="container">
+        <div id="suspect" class="circle" onclick="show('suspect')">嫌疑犯</div>
+        <div id="scene" class="circle" onclick="show('scene')">犯罪現場</div>
+    </div>
+    <div id="msg" class="info">請點擊上方圓圈探測跡證...</div>
+
+    <script>
+        function show(type) {
+            const msg = document.getElementById('msg');
+            if (type === 'suspect') {
+                msg.innerHTML = "🔴 偵測到：嫌疑犯在現場留下了「指紋」與「DNA」。";
+            } else {
+                msg.innerHTML = "🔵 偵測到：嫌疑犯身上帶走了現場的「地毯纖維」與「土壤微粒」。";
+            }
+        }
+    </script>
+</body>
+</html>
