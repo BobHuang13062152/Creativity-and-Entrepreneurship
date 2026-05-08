@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>鴨子曲線與儲能模擬器</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding: 30px; }
+        .dashboard { background: #1e293b; padding: 20px; border-radius: 12px; display: inline-block; border: 2px solid #3b82f6; width: 80%; }
+        .slider-container { margin: 20px 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
+        input[type="range"] { width: 300px; cursor: pointer; }
+        .chart-bar { height: 30px; background: #3b82f6; transition: 0.3s; border-radius: 5px; margin: 10px auto; }
+        .alert { color: #ef4444; font-weight: bold; margin-top: 15px; }
+        .success { color: #10b981; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2>🦆 鴨子曲線 & 儲能削峰填谷模擬器</h2>
+        <p>情境：傍晚 18:00 (太陽下山，民眾回家開冷氣)</p>
+        <div style="text-align: left; max-width: 500px; margin: 0 auto;">
+            <p><strong>基礎用電需求：</strong> 30 GW</p>
+            <p><strong>太陽能剩餘發電：</strong> <span style="color:#eab308">5</span> GW</p>
+            <p><strong>儲能系統 (BESS) 支援：</strong> <span id="bessVal" style="color:#10b981">0</span> GW</p>
+            <hr style="border-color: #334155;">
+            <p><strong>⚠️ 傳統電廠需負擔淨負載 (Net Load)：</strong> <span id="netLoadVal" style="font-size: 1.5em; color: #ef4444;">25</span> GW</p>
+        </div>
+        <div class="slider-container">
+            <label>🔋 啟動電池放電 (0 - 15 GW): </label>
+            <input type="range" id="bessSlider" min="0" max="15" value="0" oninput="calcLoad()">
+        </div>
+        <div id="netLoadBar" class="chart-bar" style="width: 83%; background: #ef4444;"></div>
+        <div id="statusMsg" class="alert">⚠️ 警告：淨負載過高！鴨脖子出現，電網瀕臨崩潰！</div>
+    </div>
+    <script>
+        function calcLoad() {
+            const bess = parseInt(document.getElementById('bessSlider').value);
+            const netLoad = 30 - 5 - bess;
+            document.getElementById('bessVal').innerText = bess;
+            document.getElementById('netLoadVal').innerText = netLoad;
+            
+            const bar = document.getElementById('netLoadBar');
+            const msg = document.getElementById('statusMsg');
+            bar.style.width = (netLoad / 30) * 100 + "%";
+            
+            if(netLoad > 20) {
+                bar.style.background = "#ef4444"; msg.className = "alert"; msg.innerText = "⚠️ 警告：淨負載過高！鴨脖子出現，電網瀕臨崩潰！";
+            } else if (netLoad > 15) {
+                bar.style.background = "#f59e0b"; msg.className = "alert"; msg.style.color = "#f59e0b"; msg.innerText = "⚡ 警戒：電網壓力緩解，仍需加速運轉。";
+            } else {
+                bar.style.background = "#10b981"; msg.className = "success"; msg.innerText = "✅ 安全：儲能成功『削峰填谷』，成功壓平鴨子曲線！";
+            }
+        }
+    </script>
+</body>
+</html>
