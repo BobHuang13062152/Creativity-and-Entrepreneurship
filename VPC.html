@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>名在雅 - VPC 價值適配檢測器</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .container { display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap;}
+        .box { background: #1e293b; padding: 20px; border-radius: 12px; width: 340px; border: 2px solid #3b82f6; text-align: left; }
+        .box h3 { color: #38bdf8; text-align: center; border-bottom: 1px solid #475569; padding-bottom: 10px; margin-top: 0;}
+        .item { margin: 12px 0; display: flex; align-items: center; gap: 10px; background: #334155; padding: 10px; border-radius: 6px; cursor: pointer;}
+        input[type="checkbox"] { transform: scale(1.3); cursor: pointer; }
+        #result-bar { width: 100%; max-width: 710px; height: 35px; background: #334155; margin: 30px auto; border-radius: 15px; overflow: hidden; position: relative;}
+        #fit-level { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #22c55e); transition: width 0.5s ease-in-out; }
+        #score-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; line-height: 35px; font-weight: bold; font-size: 1.1em;}
+        #feedback { font-size: 1.1em; max-width: 700px; margin: 0 auto; line-height: 1.5; color: #fbbf24; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <h2>🚀 VPC 價值主張適配 (PMF) 檢測器</h2>
+    <p>模擬案例：開發一款高齡者 AI 陪伴機器人</p>
+    
+    <div class="container">
+        <div class="box">
+            <h3>😢 顧客素描 (痛點 Pains)</h3>
+            <label class="item"><input type="checkbox" id="pain1" onchange="calculateFit()"> 子女上班，獨自在家感到孤單</label>
+            <label class="item"><input type="checkbox" id="pain2" onchange="calculateFit()"> 忘記按時服用慢性病藥物</label>
+            <label class="item"><input type="checkbox" id="pain3" onchange="calculateFit()"> 遇到緊急狀況無法對外求救</label>
+        </div>
+
+        <div class="box">
+            <h3>💊 價值地圖 (解方 Relievers)</h3>
+            <label class="item"><input type="checkbox" id="rel1" onchange="calculateFit()"> NLP 語音聊天與視訊通話功能</label>
+            <label class="item"><input type="checkbox" id="rel2" onchange="calculateFit()"> 智慧化用藥時間推播與自動給藥</label>
+            <label class="item"><input type="checkbox" id="rel3" onchange="calculateFit()"> 穿戴式跌倒偵測與 API 自動通報</label>
+        </div>
+    </div>
+
+    <div id="result-bar">
+        <div id="fit-level"></div>
+        <div id="score-text">市場契合度 (PMF): 0%</div>
+    </div>
+    <p id="feedback">請嘗試勾選痛點，並選擇對應的產品解方來驗證市場契合度。</p>
+
+    <script>
+        function calculateFit() {
+            const matches = [{ pain: 'pain1', rel: 'rel1' }, { pain: 'pain2', rel: 'rel2' }, { pain: 'pain3', rel: 'rel3' }];
+            let score = 0, totalPains = 0;
+
+            matches.forEach(pair => {
+                const painChecked = document.getElementById(pair.pain).checked;
+                const relChecked = document.getElementById(pair.rel).checked;
+                if (painChecked) totalPains++;
+                if (painChecked && relChecked) score++;
+            });
+
+            let percentage = totalPains === 0 ? 0 : Math.round((score / totalPains) * 100);
+            
+            // 偵測過度工程化 (Over-engineering)
+            const anyRelChecked = document.getElementById('rel1').checked || document.getElementById('rel2').checked || document.getElementById('rel3').checked;
+            if (totalPains === 0 && anyRelChecked) {
+                percentage = 0;
+                document.getElementById('feedback').innerText = "⚠️ 警告：您開發了系統功能，但顧客卻沒有這些痛點！這就是標準的「過度工程化 (Over-engineering)」。";
+                document.getElementById('feedback').style.color = "#ef4444";
+            } else {
+                if(percentage === 100) {
+                    document.getElementById('feedback').innerText = "✅ 完美適配 (Product-Market Fit)！您的產品解方精準擊中了顧客的所有痛點，是一份極佳的 BP。";
+                    document.getElementById('feedback').style.color = "#22c55e";
+                } else if (percentage > 0) {
+                    document.getElementById('feedback').innerText = "⚡ 部分適配。根據精實創業精神，請透過 BML 迴圈繼續迭代您的產品功能。";
+                    document.getElementById('feedback').style.color = "#fbbf24";
+                } else {
+                    document.getElementById('feedback').innerText = "請嘗試勾選痛點，並選擇對應的產品解方來驗證市場契合度。";
+                    document.getElementById('feedback').style.color = "#94a3b8";
+                }
+            }
+
+            document.getElementById('fit-level').style.width = percentage + "%";
+            document.getElementById('score-text').innerText = "市場契合度 (PMF): " + percentage + "%";
+        }
+    </script>
+</body>
+</html>
