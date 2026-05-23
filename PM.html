@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>名在雅 - 實驗室資源分配模擬器</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .dashboard { background: #1e293b; padding: 30px; border-radius: 12px; display: inline-block; border: 2px solid #3b82f6; width: 600px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .slider-container { margin: 20px 0; text-align: left;}
+        input[type="range"] { width: 100%; cursor: pointer; margin-top: 10px;}
+        .stats { display: flex; justify-content: space-around; margin-top: 20px; background: #334155; padding: 15px; border-radius: 8px;}
+        .stat-box { font-size: 1.2em; font-weight: bold;}
+        #impact-bar-bg { width: 100%; height: 35px; background: #475569; margin-top: 30px; border-radius: 20px; overflow: hidden; position: relative;}
+        #impact-fill { height: 100%; width: 50%; background: linear-gradient(90deg, #ca8a04, #16a34a); transition: 0.4s;}
+        #impact-text { position: absolute; width: 100%; top: 0; line-height: 35px; font-weight: bold;}
+        .msg { margin-top: 20px; font-size: 1.1em; color: #fbbf24; min-height: 50px;}
+    </style>
+</head>
+<body>
+    <h2>🚀 學術團隊資源分配模擬器 (Lab as a Startup)</h2>
+    <p>模擬陳坤志教授演講概念：調整研究團隊在「守成」與「發展」上的資源比例。</p>
+    
+    <div class="dashboard">
+        <div class="slider-container">
+            <label style="font-weight:bold; color: #38bdf8;">🔧 調整「守成 (延續核心計畫)」比例：<span id="defend-val">70</span>%</label>
+            <input type="range" id="defend-slider" min="0" max="100" value="70" oninput="updateStats()">
+            <small style="color:#94a3b8;">(剩餘比例將自動分配給「發展 (探索新藍海)」)</small>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">🛡️ 守成比例: <span id="defend-disp" style="color:#38bdf8;">70%</span></div>
+            <div class="stat-box">💡 發展比例: <span id="explore-disp" style="color:#22c55e;">30%</span></div>
+        </div>
+
+        <div id="impact-bar-bg">
+            <div id="impact-fill"></div>
+            <div id="impact-text">預估學術影響力 (Impact Factor): 85</div>
+        </div>
+
+        <div id="msg-box" class="msg">
+            ✅ 完美比例！70% 穩固實驗室核心經費，30% 探索前沿領域，團隊發展最穩健。
+        </div>
+    </div>
+
+    <script>
+        function updateStats() {
+            const defend = parseInt(document.getElementById('defend-slider').value);
+            const explore = 100 - defend;
+            
+            document.getElementById('defend-val').innerText = defend;
+            document.getElementById('defend-disp').innerText = defend + "%";
+            document.getElementById('explore-disp').innerText = explore + "%";
+
+            // 計算影響力公式 (模擬 70/30 為最佳解，使用二次函數開口向下)
+            // 當 defend = 70 時，達到最大值 100
+            let impact = Math.round(100 - (Math.pow(defend - 70, 2) / 20));
+            if(impact < 10) impact = 10; // 保底
+
+            document.getElementById('impact-fill').style.width = impact + "%";
+            document.getElementById('impact-text').innerText = "預估學術影響力 (Impact Factor): " + impact;
+
+            const msgBox = document.getElementById('msg-box');
+            if(defend === 70) {
+                msgBox.innerText = "✅ 完美比例！70% 穩固核心戰力，30% 探索新藍海，如同陳教授演講所述的黃金法則。";
+                msgBox.style.color = "#22c55e";
+            } else if (defend > 85) {
+                msgBox.innerText = "⚠️ 警告：過度守成！實驗室缺乏創新動能，可能在未來幾年失去競爭力。";
+                msgBox.style.color = "#ef4444";
+            } else if (explore > 60) {
+                msgBox.innerText = "⚠️ 警告：過度發散！新題目太多，基礎平台不穩，實驗室面臨經費與成果斷層風險。";
+                msgBox.style.color = "#ef4444";
+            } else {
+                msgBox.innerText = "⚡ 狀態尚可，但建議微調資源，尋找守成與創新的最佳平衡點。";
+                msgBox.style.color = "#fbbf24";
+            }
+        }
+        // 初始化
+        updateStats();
+    </script>
+</body>
+</html>
