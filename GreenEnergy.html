@@ -1,0 +1,93 @@
+HTML
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>名在雅 - 綠能資產與職涯機會成本模擬器</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .dashboard { background: #1e293b; padding: 25px; border-radius: 12px; display: inline-block; border: 2px solid #22c55e; width: 650px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); text-align: left;}
+        h2, h3 { text-align: center; color: #4ade80;}
+        .slider-group { margin: 15px 0; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; color: #94a3b8;}
+        input[type="range"] { width: 100%; cursor: pointer; }
+        .result-panel { background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 20px; display: flex; justify-content: space-between;}
+        .money-box { text-align: center; width: 48%; padding: 10px; background: #1e293b; border-radius: 6px; border: 1px solid #334155;}
+        .highlight-green { color: #22c55e; font-size: 1.4em; font-weight: bold; }
+        .highlight-blue { color: #3b82f6; font-size: 1.4em; font-weight: bold; }
+        .verdict { margin-top: 15px; text-align: center; font-weight: bold; color: #fbbf24; font-size: 1.1em; line-height: 1.5;}
+    </style>
+</head>
+<body>
+    <h2>☀️ 綠能資產轉換與職涯機會成本模擬器</h2>
+    <p style="text-align:center; color:#cbd5e1;">致敬黃彥仁經理：當世界追求算力，我們選擇用數據創造「能、利」</p>
+    
+    <div style="display:flex; justify-content:center;">
+        <div class="dashboard">
+            <h3>⚙️ 案場參數與機會成本設定</h3>
+            
+            <div class="slider-group">
+                <label>🗺️ 預期活化閒置土地面積：<span id="land-val" style="color:#4ade80;">500</span> 坪</label>
+                <input type="range" id="land-slider" min="100" max="2000" step="50" value="500" oninput="calculate()">
+            </div>
+
+            <div class="slider-group">
+                <label>⚡ 太陽能板發電模組轉換效率：<span id="eff-val" style="color:#4ade80;">22</span> %</label>
+                <input type="range" id="eff-slider" min="15" max="30" step="1" value="22" oninput="calculate()">
+            </div>
+
+            <div class="slider-group">
+                <label>👨‍💻 傳統頂尖科技廠(如台積電)預估年薪：<span id="salary-val" style="color:#3b82f6;">300</span> 萬元</label>
+                <input type="range" id="salary-slider" min="150" max="500" step="10" value="300" oninput="calculate()">
+            </div>
+
+            <div class="result-panel">
+                <div class="money-box">
+                    <span style="color:#94a3b8; font-size:0.9em;">🛡️ 傳統科技廠 30年總收入</span><br/>
+                    <span id="tech-total" class="highlight-blue">9,000 萬元</span>
+                </div>
+                <div class="money-box">
+                    <span style="color:#94a3b8; font-size:0.9em;">🚀 網曜綠能資產 30年預估收益</span><br/>
+                    <span id="green-total" class="highlight-green">11,500 萬元</span>
+                </div>
+            </div>
+
+            <div id="verdict-text" class="verdict">
+                💡 綠能開拓路徑收益高出傳統科技廠 2,500 萬元！成功將閒置資產轉化為長期永續「能與利」。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const land = parseInt(document.getElementById('land-slider').value);
+            const eff = parseInt(document.getElementById('eff-slider').value);
+            const salary = parseInt(document.getElementById('salary-slider').value);
+
+            document.getElementById('land-val').innerText = land;
+            document.getElementById('eff-val').innerText = eff;
+            document.getElementById('salary-val').innerText = salary;
+
+            // 科技廠總收入
+            const techTotal = salary * 30;
+            document.getElementById('tech-total').innerText = techTotal.toLocaleString() + " 萬元";
+
+            // 綠能收益模型
+            const baseGreenProfit = Math.round((land * 15) * (eff / 22) * 1.045);
+            document.getElementById('green-total').innerText = baseGreenProfit.toLocaleString() + " 萬元";
+
+            const diff = baseGreenProfit - techTotal;
+            const verdict = document.getElementById('verdict-text');
+            
+            if (diff > 0) {
+                verdict.innerHTML = "✅ 跨域成功！綠能路徑高出科技廠 <span style='color:#4ade80;'>" + diff.toLocaleString() + "</span> 萬元。<br/>呼應講者名言：『親自走進未來並把它做出來』！";
+            } else if (diff < 0) {
+                verdict.innerHTML = "⚡ 財務收益雖低於科技廠 <span style='color:#3b82f6;'>" + Math.abs(diff).toLocaleString() + "</span> 萬元，<br/>但創造的『環境資產』與減碳社會價值無可估量！";
+            } else {
+                verdict.innerHTML = "⚖️ 兩者機會成本達到完美平衡。這是一場關於算力與綠能的黃金交叉抉擇。";
+            }
+        }
+        calculate();
+    </script>
+</body>
+</html>
